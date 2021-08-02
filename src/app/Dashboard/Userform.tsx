@@ -35,11 +35,6 @@ const Userform: React.FunctionComponent = () => {
         setvalue(value);
     }
 
-    const onClick = () => {
-        console.log(Name, ageValue);
-    }
-
-
     return (
         <PageSection>
             <Form>
@@ -59,7 +54,7 @@ const Userform: React.FunctionComponent = () => {
                     </FormSelect>
                 </FormGroup>
                 <ActionGroup>
-                    <Button variant="primary" onClick={onClick}>Submit form</Button>
+                    <Button variant="primary">Submit form</Button>
                     <Button variant="primary">Clear</Button>
                 </ActionGroup>
             </Form >
