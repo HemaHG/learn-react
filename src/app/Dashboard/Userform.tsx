@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { PageSection, Form, FormGroup, TextInput, NumberInput, Radio, Dropdown, DropdownToggle, DropdownPosition, DropdownItem, ActionGroup, Button, InputGroup, FormSelect, FormSelectOption } from '@patternfly/react-core';
 import { any } from 'prop-types';
+import { validate } from 'webpack';
+import { Table, TableHeader, TableBody, IRow } from '@patternfly/react-table';
 
 interface UserformData {
     name: string;
@@ -26,7 +28,7 @@ const Userform: React.FunctionComponent = () => {
     const onChangeGender = (gender, event) => {
         setGender(event.target.value);
     }
-    
+
     const [monthValue, setMonthValue] = useState("Please Choose")
     const options = [
         { value: 'please choose', label: 'Please Choose', disabled: false },
@@ -65,6 +67,19 @@ const Userform: React.FunctionComponent = () => {
             setMonthValue("");
 
         }
+
+        const columns = ['Name', 'Age', 'Gender', 'Favourite month'];
+
+        const rows = () => {
+            const tabledata: (IRow | string[])[] = [];
+            userData.map((user) => {
+                tabledata.push({
+                    cells: [user.name, user.age, user.gender, user.month]
+                })
+            });
+            return tabledata;
+        }
+
     }
 
     return (
@@ -75,8 +90,8 @@ const Userform: React.FunctionComponent = () => {
                 <FormGroup label="Age" fieldId="age-field" isRequired helperText="Please provide your age">
                     <NumberInput onPlus={agePlusClick} onMinus={ageMinusClick} value={ageValue} min={0}></NumberInput>
                 </FormGroup>
-                <FormGroup label="Gender" fieldId="GenderField" isRequired helperText="Please provide your gender"> <Radio label="Female" id="radio-button" name="gender-radio-button" value="female" onChange={onChangeGender}></Radio>
-                    <Radio label="Male" id="radio-button" name="gender-radio-button" value="male" onChange={onChangeGender}></Radio>
+                <FormGroup label="Gender" fieldId="GenderField" isRequired helperText="Please provide your gender"> <Radio label="Female" id="radio-button" name="gender-radio-button" value="Female" onChange={onChangeGender}></Radio>
+                    <Radio label="Male" id="radio-button" name="gender-radio-button" value="Male" onChange={onChangeGender}></Radio>
                 </FormGroup>
                 <FormGroup label="Favourite month" fieldId="favourite-month" helperText="Tell us your favourite month">
                     <FormSelect value={monthValue} onChange={onChangeMonth} >
@@ -86,10 +101,15 @@ const Userform: React.FunctionComponent = () => {
                     </FormSelect>
                 </FormGroup>
                 <ActionGroup>
-                    <Button variant="primary" onClick={onSubmit}>Submit form</Button>
+                    <Button variant="primary" onClick={onSubmit} isDisabled={name.length < 1 || ageValue <= 0 || monthValue == "Please Choose" ? true : false}>Submit form</Button>
                     <Button variant="primary" onClick={onClickClearData}>Clear</Button>
                 </ActionGroup>
             </Form >
+
+            <Table cells={columns} rows={rows()} aria-label="some-table">
+                <TableHeader />
+                <TableBody />
+            </Table>
         </PageSection>
 
     )
