@@ -14,7 +14,7 @@ interface IUserformprops {
     onChangeGender: (gender, event) => void;
     monthvalue: string;
     onChangeMonth: (monthvalue) => void;
-    onSubmit: () => void;
+    onSubmit: (e) => void;
     onClickClearData: () => void;
 }
 const Userform: React.FunctionComponent<IUserformprops> = ({name, setName, ageValue, agePlusClick ,ageMinusClick, onChangeGender, monthvalue, onChangeMonth, onSubmit,onClickClearData }) => {
@@ -33,6 +33,10 @@ const Userform: React.FunctionComponent<IUserformprops> = ({name, setName, ageVa
         { value: 'November', label: 'november', disabled: false },
         { value: 'December', label: 'December', disabled: false }
     ];
+
+    const isFormSubmitDisable = () => {
+        return name.length < 1 || ageValue <= 0 || monthvalue == "Please Choose" ? true : false
+    }
     return (
         <PageSection>
             <Form>
@@ -53,7 +57,7 @@ const Userform: React.FunctionComponent<IUserformprops> = ({name, setName, ageVa
                     </FormSelect>
                 </FormGroup>
                 <ActionGroup>
-                    <Button variant="primary" onClick={onSubmit} isDisabled={name.length < 1 || ageValue <= 0 || monthvalue == "Please Choose" ? true : false}>Submit form</Button>
+                    <Button variant="primary" onClick={onSubmit} isDisabled={isFormSubmitDisable()}>Submit form</Button>
                     <Button variant="primary" onClick={onClickClearData}>Clear</Button>
                 </ActionGroup>
             </Form >
