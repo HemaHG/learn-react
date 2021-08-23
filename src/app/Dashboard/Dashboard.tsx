@@ -4,6 +4,7 @@ import { IRow } from '@patternfly/react-table';
 import { Userform } from './Userform';
 import { Formtable } from './Formtable';
 import { Githubuser } from './Githubuser';
+import { GetGithubRepos } from './GetGithubRepos';
 
 export interface UserformData {
   name: string;
@@ -31,7 +32,7 @@ const Dashboard: React.FunctionComponent = () => {
     setMonthValue(value);
   }
 
-  const [gender, SetGender] = useState<string>("Female");
+  const [gender, SetGender] = useState<string>(" ");
 
   const onChangeGender = (gender, event) => {
       console.log(event.target.value);
@@ -40,16 +41,15 @@ const Dashboard: React.FunctionComponent = () => {
 
   const [arrayUserData, setArrayUserData] = useState<UserformData[]>([]);
 
-  const onSubmit = (e) => {
-      e.preventDefault();
+  const onSubmit = () => {
       const newrecord: UserformData = { name, age: ageValue, gender, month: monthValue };
       console.log(newrecord);
       setArrayUserData([...arrayUserData, newrecord]);
       setName("");
       setageValue(0);
-      SetGender("Female");
+      SetGender(" ");
       setMonthValue("Please Choose");
-
+      return alert("Form is submitted successfully");
 
   }
 
@@ -65,7 +65,7 @@ const Dashboard: React.FunctionComponent = () => {
 
   const rows = () => {
     const tabledata: (string[] | IRow)[] = [];
-    arrayUserData.map((user) => {
+    arrayUserData.filter((user) => user.name.toLowerCase().includes(searchInputState.toLowerCase())).map((user) => {
         tabledata.push({
             cells: [user.name, user.age, user.gender, user.month]
         })
@@ -80,11 +80,17 @@ const Dashboard: React.FunctionComponent = () => {
     setActiveTabKey(tabIndex);
   }
 
+  const [searchInputState, setSearchInputState] = useState<string>("");
 
+  const onChangeSearchInput = (value) => {
+      setSearchInputState(value);
+      console.log(searchInputState);
+  }
 
   const contentRef1 = React.createRef<HTMLElement>();
   const contentRef2 = React.createRef<HTMLElement>();
   const contentRef3 =  React.createRef<HTMLElement>();
+  const contentRef4 = React.createRef<HTMLElement>();
 
   return (
     <PageSection>
@@ -92,13 +98,16 @@ const Dashboard: React.FunctionComponent = () => {
         <Tab eventKey={0} title={<TabTitleText>UserForm</TabTitleText>} tabContentId="refTab1Section" tabContentRef={contentRef1}>UserForm</Tab>
         <Tab eventKey={1} title={<TabTitleText>FormData</TabTitleText>} tabContentId="refTab2Section" tabContentRef={contentRef2}>FormTable</Tab>
         <Tab eventKey={2} title={<TabTitleText>GithubUser</TabTitleText>} tabContentId="refTab3Section" tabContentRef={contentRef3}>Github User</Tab>
+        <Tab eventKey={3} title={<TabTitleText>GithubRepo</TabTitleText>} tabContentId="refTab4Section" tabContentRef={contentRef4}>Github Repo</Tab>
       </Tabs>
       <TabContent eventKey={0} id="refTab1Section" ref={contentRef1}>
         <Userform name={name} setName={setName} ageMinusClick={ageMinusClick} agePlusClick={agePlusClick} ageValue={ageValue} 
         onChangeGender={onChangeGender} monthvalue={monthValue} onChangeMonth={onChangeMonth} onSubmit={onSubmit} onClickClearData={onClickClearData}/>
         </TabContent>
-       <TabContent eventKey={1} id="refTab2Section" ref={contentRef2}><Formtable rows={rows()}/></TabContent> 
+       <TabContent eventKey={1} id="refTab2Section" ref={contentRef2}><Formtable rows={rows()} searchInputState={searchInputState} onChangeSearchInput={onChangeSearchInput}/></TabContent> 
        <TabContent eventKey={2} id="refTab3Section" ref={contentRef3}><Githubuser/></TabContent>
+       <TabContent eventKey={3} id="refTab4Section" ref={contentRef4}><GetGithubRepos/></TabContent>
+
     </PageSection>
   )
 }

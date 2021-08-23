@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PageSection, Form, FormGroup, TextInput, NumberInput, Radio, Dropdown, DropdownToggle, DropdownPosition, DropdownItem, ActionGroup, Button, InputGroup, FormSelect, FormSelectOption, ValidatedOptions, FormHelperText } from '@patternfly/react-core';
+import { PageSection, Form, FormGroup, TextInput, NumberInput, Radio, Dropdown, DropdownToggle, DropdownPosition, DropdownItem, ActionGroup, Button, InputGroup, FormSelect, FormSelectOption, ValidatedOptions, FormHelperText, Alert } from '@patternfly/react-core';
+import { Modal, ModalVariant} from '@patternfly/react-core';
 import { any } from 'prop-types';
 import { validate } from 'webpack';
 import { Table, TableHeader, TableBody, IRow } from '@patternfly/react-table';
@@ -14,10 +15,10 @@ interface IUserformprops {
     onChangeGender: (gender, event) => void;
     monthvalue: string;
     onChangeMonth: (monthvalue) => void;
-    onSubmit: (e) => void;
+    onSubmit: () => void;
     onClickClearData: () => void;
 }
-const Userform: React.FunctionComponent<IUserformprops> = ({name, setName, ageValue, agePlusClick ,ageMinusClick, onChangeGender, monthvalue, onChangeMonth, onSubmit,onClickClearData }) => {
+const Userform: React.FunctionComponent<IUserformprops> = ({name, setName, ageValue, agePlusClick ,ageMinusClick, onChangeGender, monthvalue, onChangeMonth, onSubmit,onClickClearData }) => {    
     const options = [
         { value: 'please choose', label: 'Please Choose', disabled: false },
         { value: 'January', label: 'January', disabled: false },
@@ -37,6 +38,25 @@ const Userform: React.FunctionComponent<IUserformprops> = ({name, setName, ageVa
     const isFormSubmitDisable = () => {
         return name.length < 1 || ageValue <= 0 || monthvalue == "Please Choose" ? true : false
     }
+
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    const handleModal = () => {
+        setIsModalOpen(true)
+        console.log(!isModalOpen);
+    }
+
+    const onSubmitform = () => {
+        onSubmit();
+        setIsModalOpen(!isModalOpen);
+    }
+    
+    const onClearForm = () => {
+        onClickClearData();
+        setIsModalOpen(!isModalOpen);
+    }
+
+
     return (
         <PageSection>
             <Form>
@@ -56,11 +76,18 @@ const Userform: React.FunctionComponent<IUserformprops> = ({name, setName, ageVa
                         ))}
                     </FormSelect>
                 </FormGroup>
-                <ActionGroup>
-                    <Button variant="primary" onClick={onSubmit} isDisabled={isFormSubmitDisable()}>Submit form</Button>
-                    <Button variant="primary" onClick={onClickClearData}>Clear</Button>
-                </ActionGroup>
             </Form >
+            <ActionGroup>
+                <Button variant="primary" onClick={handleModal} isDisabled={isFormSubmitDisable()}>Submit form</Button>
+                    <Modal
+                        title="Are you sure,Do you want to submit the form?" isOpen={isModalOpen} onClose={handleModal} variant="small"
+                        actions={[
+                        <Button key="confirm" variant="primary" onClick={onSubmitform}>Confirm</Button>,
+                        <Button key="cancel" variant="link" onClick={onClearForm}>Cancel</Button>]}> 
+
+                    </Modal>
+                <Button variant="primary" onClick={onClearForm}>Clear</Button>
+            </ActionGroup>
         </PageSection>
 
     )
