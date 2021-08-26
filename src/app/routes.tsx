@@ -8,6 +8,7 @@ import { ProfileSettings } from '@app/Settings/Profile/ProfileSettings';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
+import { UserDetails } from './Dashboard/UserDetails';
 
 let routeFocusTimer: number;
 export interface IAppRoute {
@@ -63,6 +64,14 @@ const routes: AppRouteConfig[] = [
         title: 'PatternFly Seed | Profile Settings',
       },
     ],
+  },
+  {
+    component: UserDetails,
+    exact: true,
+    label: 'UserDetails',
+    path: '/name/:name',
+    title: 'Github repo'
+
   },
 ];
 

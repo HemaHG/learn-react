@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Toolbar, ToolbarItem,ToolbarItemProps, ToolbarContent, InputGroup, TextInput, Button, ButtonVariant} from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, IRow } from '@patternfly/react-table';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
-
+import {Link} from 'react-router-dom'
 
 
 const Githubuser: React.FunctionComponent = () => {
@@ -13,7 +13,7 @@ const Githubuser: React.FunctionComponent = () => {
     
     React.useEffect(() => {
         const getUsers = async () => {
-            const response = await axios.get('https://api.github.com/users');
+            const response = await axios.get(`https://api.github.com/users`);
             setGithubUsers(response.data);
         };
         getUsers();
@@ -25,7 +25,7 @@ const Githubuser: React.FunctionComponent = () => {
         const tabledata: (string[] | IRow)[] = [];
         UsersPerPage.filter((user) => user.login.toLowerCase().includes(searchInputState.toLowerCase())).map((user) => {
             tabledata.push({
-                cells: [user.login, user.id]
+                cells: [{title: (<Link to={{pathname: `/name/${user.login}`, state: {name: user.login}}} >{user.login}</Link>)}, user.id ]
             })
         });    
         return tabledata;

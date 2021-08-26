@@ -5,6 +5,9 @@ import { Userform } from './Userform';
 import { Formtable } from './Formtable';
 import { Githubuser } from './Githubuser';
 import { GetGithubRepos } from './GetGithubRepos';
+import { BrowserRouter } from 'react-router-dom';
+import { CreateIssue } from './CreatiIssue';
+import { CreateRepo } from './CreateRepo';
 
 export interface UserformData {
   name: string;
@@ -34,9 +37,12 @@ const Dashboard: React.FunctionComponent = () => {
 
   const [gender, SetGender] = useState<string>(" ");
 
+  const [checked, isChecked] = useState<boolean>(false);
+
   const onChangeGender = (gender, event) => {
       console.log(event.target.value);
       SetGender(event.target.value);
+      isChecked(!checked);
   }
 
   const [arrayUserData, setArrayUserData] = useState<UserformData[]>([]);
@@ -48,6 +54,7 @@ const Dashboard: React.FunctionComponent = () => {
       setName("");
       setageValue(0);
       SetGender(" ");
+      isChecked(!checked);
       setMonthValue("Please Choose");
       return alert("Form is submitted successfully");
 
@@ -91,6 +98,8 @@ const Dashboard: React.FunctionComponent = () => {
   const contentRef2 = React.createRef<HTMLElement>();
   const contentRef3 =  React.createRef<HTMLElement>();
   const contentRef4 = React.createRef<HTMLElement>();
+  const contentRef5 = React.createRef<HTMLElement>();
+  const contentRef6 = React.createRef<HTMLElement>();
 
   return (
     <PageSection>
@@ -99,15 +108,16 @@ const Dashboard: React.FunctionComponent = () => {
         <Tab eventKey={1} title={<TabTitleText>FormData</TabTitleText>} tabContentId="refTab2Section" tabContentRef={contentRef2}>FormTable</Tab>
         <Tab eventKey={2} title={<TabTitleText>GithubUser</TabTitleText>} tabContentId="refTab3Section" tabContentRef={contentRef3}>Github User</Tab>
         <Tab eventKey={3} title={<TabTitleText>GithubRepo</TabTitleText>} tabContentId="refTab4Section" tabContentRef={contentRef4}>Github Repo</Tab>
+        <Tab eventKey={4} title={<TabTitleText>CreateIssue</TabTitleText>} tabContentId="refTab5Section" tabContentRef={contentRef5}>Create Issue</Tab>
       </Tabs>
       <TabContent eventKey={0} id="refTab1Section" ref={contentRef1}>
         <Userform name={name} setName={setName} ageMinusClick={ageMinusClick} agePlusClick={agePlusClick} ageValue={ageValue} 
         onChangeGender={onChangeGender} monthvalue={monthValue} onChangeMonth={onChangeMonth} onSubmit={onSubmit} onClickClearData={onClickClearData}/>
         </TabContent>
-       <TabContent eventKey={1} id="refTab2Section" ref={contentRef2}><Formtable rows={rows()} searchInputState={searchInputState} onChangeSearchInput={onChangeSearchInput}/></TabContent> 
+       <TabContent eventKey={1} id="refTab2Section" ref={contentRef2}><Formtable rows={rows()} searchInputState={searchInputState} onChangeSearchInput={onChangeSearchInput} /></TabContent> 
        <TabContent eventKey={2} id="refTab3Section" ref={contentRef3}><Githubuser/></TabContent>
        <TabContent eventKey={3} id="refTab4Section" ref={contentRef4}><GetGithubRepos/></TabContent>
-
+       <TabContent eventKey={4} id="refTab5Section" ref={contentRef5}><CreateIssue/></TabContent>
     </PageSection>
   )
 }
